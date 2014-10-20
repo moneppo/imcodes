@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+<head>
+	{% for item in STYLES %}<link rel="stylesheet" href="{{ item }}">{% endfor %}
+	{% for item in SCRIPTS %}
+	<script type="text/javascript" src="{{ item.src }}" id="{{ item.id }}"></script>
+	{% endfor %}
+<script>
+	$(document).ready(function() {
+		
+		function put(output) {
+			var wrap = $('<div/>');
+			var code = $('<code/>');
+			wrap.append(code);
+			code.text(output);
+			$('#DebugOutput').append(wrap);
+		}  
+		
+		var jsrepl = new JSREPL({  
+			input: function(cb) {},  
+			output: put,
+			result: put,  
+			error: put
+		});  
+		
+		var language;
+		var filename = "{{ code }}";
+		switch(filename.split('.').pop().toLowerCase()) {
+				case 'py':
+					language = 'python';
+					break;
+				case 'js':
+					language = 'javascript';
+					break;
+				case 'rb':
+					language = 'ruby';
+					break;
+				default:
+					language = 'javascript';
+					break;
+		}
+		
+		var codeBlock = CodeMirror($("#CodeContainer").get(0), { 
+			mode: language });	
+		$.get(filename, function(data) {
+			codeBlock.setValue(data);
+		});
+		
+		jsrepl.loadLanguage(language, function () {  
+    	console.log(language + 'loaded');  
+  	});
+		
+		$(document).bind('click', '#run', function() {
+			jsrepl.eval(codeBlock.getValue());
+		})
+	});
+</script>
+</head>
+<body>
+	<ul id="Timeline">
+		{% for number in range(numSteps) %}
+		<li><a href="step{{number}}.html">{{number}}</a></li>
+		{% endfor %}
+	</ul>
+	<div id="CodeContainer"></div>
+	<input type="button" id="RunButton" value="Run!"></input>
+	<div id="DebugOutput"></div>
+	<div id="Canvas"></div>
+</body>
+</html>

@@ -1,0 +1,10 @@
+Title: Test App
+Steps:
+- 
+  Title: Just the First Step
+  Layout: Text
+  TextContents: test1.md
+-
+  Title: Just the Second Step
+  Layout: Code
+  CodeContents: test2.js
