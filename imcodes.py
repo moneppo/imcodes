@@ -41,7 +41,7 @@ class TimelineParser:
 		blocks = RE.findall(content)
 		keyframes = [];
 		for block in blocks:
-			timeInSeconds = int(block[0]) + int(block[1])
+			timeInSeconds = int(block[0]) * 60 + int(block[1])
 			content = block[2]
 			if self.code:
 				keyframes.append([timeInSeconds, content])
@@ -91,7 +91,7 @@ class VideoAndCodeLayout(Layout):
 		Layout.__init__(self, env, yamlBlock, basePath, 'VideoAndCode.html')	
 	def generate(self):
 		return self.template.render(
-			keyframes=self.getKeyframes(True), 
+			keyframes=self.getTimeline(True), 
 			code=self.getCode(),
 			video=self.videoUrl, 
 			title=self.title)
@@ -126,7 +126,7 @@ class VideoAndTextLayout(Layout):
 	def generate(self):	
 		return self.template.render(
 			contents=self.getMarkdown(), 
-			keyframes=self.getKeyframes(False),
+			keyframes=self.getTimeline(False),
 			video=self.info['Video'],
 			title=self.info['Title'])
 	
@@ -139,8 +139,7 @@ class TextAndCodeLayout(Layout):
 			contents=self.getMarkdown(),
 			title=self.info['Title'])
 
-def renderStep(s, env, index, basePath, outDir):
-	
+def renderStep(s, env, index, basePath, outDir):	
 	layout = TextLayout(s, basePath, env)
 	layoutType = 'TextLayout'
 	try:
@@ -167,14 +166,17 @@ def renderStep(s, env, index, basePath, outDir):
 env = Environment(loader=PackageLoader('imcodes', 'templates'));
 env.globals = {
 	"SCRIPTS": 
-		[{"src":"http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js", "id":""},
-		 {"src":"http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.js", "id":""},
-		 {"src":"http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/javascript/javascript.min.js", "id":""},
-		 {"src":"http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/ruby/ruby.min.js", "id":""},
-		 {"src":"http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/python/python.min.js", "id":""},
-		 {"src":"jsrepl/jsrepl.js", "id":"jsrepl-script"}],
+		["http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js",
+		 "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.js",
+		 "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/javascript/javascript.min.js",
+		 "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/python/python.min.js",
+	   "skulpt/skulpt.js",
+		 "skulpt/skulpt-stdlib.js"],
 	"STYLES":
-		["http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css"]
+		["http://yui.yahooapis.com/pure/0.5.0/pure-min.css",
+		 "http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css",
+	   "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css".
+		 "common.css"]
 };
 
 def generate(yamlFile, inDir, outDir):

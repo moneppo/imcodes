@@ -1,0 +1,81 @@
+body {
+	background-color: AliceBlue;
+	background-size: 20px 20px;
+	background-position: -2px -2px, -2px -2px, -1px -1px, -1px -1px;
+
+	background-image: linear-gradient(LightBlue 1px, transparent 1px),
+                    linear-gradient(90deg, LightBlue 1px, transparent 1px);
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+.accent {
+	background-color: #0AC;
+}
+
+.CodeMirror {
+	color: DarkSlateBlue;
+	background-color: white;
+	border: none;
+	box-shadow: 0 1px 8px #666;
+	border-radius: 5px;
+	width: 100%;
+	position: relative;
+	height: 250px;
+}
+
+#Text {
+	color: DarkSlateBlue;
+	background-color: white;
+	border: none;
+	box-shadow: 0 1px 8px #666;
+	border-radius: 5px;
+	width: 100%;
+	margin: 2px;
+	padding: 2px;
+}
+
+#Video {
+	box-shadow: 0 1px 8px #666;
+	border-radius: 5px;
+	width: 100%;
+	margin: 2px;
+}
+
+#RunButton {
+	position: absolute;
+	bottom: 5px;
+	right: 5px;
+	z-index: 100 !important;
+}
+
+#CodeContainer {
+	position: relative;
+	margin: 2px;
+}
+
+#Timeline {
+	margin: 2px;
+}
+
+#Canvas {
+	background-color: black;
+	height: 400px;
+	box-shadow: 0 1px 8px #666;
+	border-radius: 5px;
+	margin: 2px;
+}
+
+#DebugOutput {
+	box-shadow: 0 1px 8px #666;
+	border-radius: 5px;
+	height: 60px;
+	color: #333;
+	font-family: monospace;
+	font-size: 14px;
+	line-height: 1.5em;
+	margin: 2px;
+	padding: 5px;
+}

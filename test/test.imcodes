@@ -8,3 +8,8 @@ Steps:
   Title: Just the Second Step
   Layout: Code
   CodeContents: test2.js
+-
+	Title: Just the Third Step
+	Layout: VideoAndCode
+	CodeContents: test.py
+	VideoURL: myvideo.mp4
