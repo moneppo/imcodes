@@ -47,7 +47,7 @@
 	$(document).ready(function() {
 	
 		var language;
-		var filename = "{{ code }}";
+		var filename = "{{ filename }}";
 		var ext = filename.split('.').pop().toLowerCase();
 		console.log(ext);
 		switch(ext) {
@@ -67,6 +67,7 @@
 			mode: language });	
 		
 		$('#RunButton').click(function() {
+			console.log("click");
 			var code = codeBlock.getValue();
 			switch(ext) {
 					case 'js':

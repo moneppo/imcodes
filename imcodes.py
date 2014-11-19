@@ -40,11 +40,8 @@ class TimelineParser:
 		self.RE = re.compile('@(\d\d):(\d\d):\n(.*?)(?:\n\n|\s*$)', re.S)	
 	def parse(self, content):
 		blocks = self.RE.findall(content)
-		print blocks
 		keyframes = []
-		print "Blocks: {blocks}".format(blocks=len(blocks))
 		for block in blocks:
-			print "  block"
 			timeInSeconds = int(block[0]) * 60 + int(block[1])
 			content = block[2]
 			if self.code:
@@ -52,7 +49,6 @@ class TimelineParser:
 			else:
 				html = markdown.markdown(content)
 				keyframes.append([timeInSeconds, html])
-		print "Keyframes"
 		return keyframes
 
 class Layout:
@@ -96,8 +92,8 @@ class VideoAndCodeLayout(Layout):
 	def __init__(self, yamlBlock, basePath, env, step):
 		Layout.__init__(self, env, yamlBlock, basePath, 'VideoAndCode.html', step)	
 	def generate(self):
-		print self.getTimeline(True)
 		return self.template.render(
+			filename=self.info["Timeline"],
 			keyframes=self.getTimeline(True), 
 			code=self.getCode(),
 			video=self.info["VideoURL"], 
@@ -135,7 +131,6 @@ class VideoAndTextLayout(Layout):
 	def __init__(self, yamlBlock, basePath, env, step): 
 		Layout.__init__(self, env, yamlBlock, basePath, 'VideoAndText.html', step)	
 	def generate(self):	
-		print self.getTimeline(False)
 		return self.template.render(
 			contents=self.getMarkdown(), 
 			keyframes=self.getTimeline(False),

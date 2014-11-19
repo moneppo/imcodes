@@ -59,7 +59,7 @@
 	$(document).ready(function() {
 	
 		var language;
-		var filename = "";
+		var filename = "code.timeline.py";
 		var ext = filename.split('.').pop().toLowerCase();
 		console.log(ext);
 		switch(ext) {
@@ -79,6 +79,7 @@
 			mode: language });	
 		
 		$('#RunButton').click(function() {
+			console.log("click");
 			var code = codeBlock.getValue();
 			switch(ext) {
 					case 'js':
