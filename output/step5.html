@@ -77,9 +77,6 @@
 		
 		var codeBlock = CodeMirror($("#CodeContainer").get(0), { 
 			mode: language });	
-		$.get(filename, function(data) {
-			codeBlock.setValue(data);
-		}, "text");
 		
 		$('#RunButton').click(function() {
 			var code = codeBlock.getValue();
@@ -100,10 +97,50 @@
 		
 		var pop = Popcorn( "#Video" ); 
 		
+			pop.code({
+				start: 1,
+				onStart: function( options ) {
+					codeBlock.setValue($('#step0').html().slice(7,-5));
+				}
+			});
+		
+			pop.code({
+				start: 4,
+				onStart: function( options ) {
+					codeBlock.setValue($('#step1').html().slice(7,-5));
+				}
+			});
+		
+			pop.code({
+				start: 6,
+				onStart: function( options ) {
+					codeBlock.setValue($('#step2').html().slice(7,-5));
+				}
+			});
+		
 	});
 </script>
 </head>
 <body>
+	
+	<code type="text/html" id="step0" style="display: none;">
+		<!--import turtle-->
+	</code>
+	
+	<code type="text/html" id="step1" style="display: none;">
+		<!--import turtle
+t = turtle.Turtle()-->
+	</code>
+	
+	<code type="text/html" id="step2" style="display: none;">
+		<!--import turtle
+t = turtle.Turtle()
+for c in ['red', 'green', 'yellow', 'blue']:
+    t.color(c)
+    t.forward(75)
+    t.left(90)-->
+	</code>
+	
 	<div class="pure-g">
     <div class="pure-u-1">
 			<ul class="pure-paginator" id="Timeline">
@@ -112,17 +149,17 @@
 					<i class="fa fa-caret-left"></i>
 				</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step-1.html">Step 1</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step0.html">Step 1</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step0.html">Step 2</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step1.html">Step 2</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step1.html">Step 3</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step2.html">Step 3</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step2.html">Step 4</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step3.html">Step 4</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step3.html">Step 5</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step4.html">Step 5</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step4.html">Step 6</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step5.html">Step 6</a></li>
 		    
 				<li><a class="pure-button accent" href="step6.html"
 							  disabled ><i class="fa fa-caret-right"></i></a></li>

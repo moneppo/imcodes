@@ -22,11 +22,72 @@
 	$(document).ready(function() {
 		var pop = Popcorn( "#Video" ); 
 		
+			pop.code({
+				start: 0,
+				onStart: function( options ) {
+					console.log("updating...");
+					$("#Text").html($('#step0').html().slice(8,-6));
+				}
+			});
+		
+			pop.code({
+				start: 2,
+				onStart: function( options ) {
+					console.log("updating...");
+					$("#Text").html($('#step1').html().slice(8,-6));
+				}
+			});
+		
+			pop.code({
+				start: 4,
+				onStart: function( options ) {
+					console.log("updating...");
+					$("#Text").html($('#step2').html().slice(8,-6));
+				}
+			});
+		
+			pop.code({
+				start: 6,
+				onStart: function( options ) {
+					console.log("updating...");
+					$("#Text").html($('#step3').html().slice(8,-6));
+				}
+			});
+		
 	});
 </script>
 </head>
 <body>
 	<body>
+	
+		<code type="text/html" id="step0" style="display: none;">
+			<!--<h2>Ideas</h2>-->
+		</code>
+	
+		<code type="text/html" id="step1" style="display: none;">
+			<!--<h2>Ideas</h2>
+<ul>
+<li>Take over the world</li>
+</ul>-->
+		</code>
+	
+		<code type="text/html" id="step2" style="display: none;">
+			<!--<h2>Ideas</h2>
+<ul>
+<li>Take over the world</li>
+<li>Take over the solar system</li>
+</ul>-->
+		</code>
+	
+		<code type="text/html" id="step3" style="display: none;">
+			<!--<h2>Ideas</h2>
+<ul>
+<li>Take over the world</li>
+<li>Take over the solar system</li>
+<li>Take over the universe</li>
+</ul>-->
+		</code>
+	
 	<div class="pure-g">
     <div class="pure-u-1">
 			<ul class="pure-paginator" id="Timeline">
@@ -35,17 +96,17 @@
 					<i class="fa fa-caret-left"></i>
 				</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step-1.html">Step 1</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step0.html">Step 1</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step0.html">Step 2</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step1.html">Step 2</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step1.html">Step 3</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step2.html">Step 3</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step2.html">Step 4</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step3.html">Step 4</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step3.html">Step 5</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step4.html">Step 5</a></li>
 		    
-				<li><a class="pure-button accent pure-button-active" href="step4.html">Step 6</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step5.html">Step 6</a></li>
 		    
 				<li><a class="pure-button accent" href="step5.html"
 							 ><i class="fa fa-caret-right"></i></a></li>

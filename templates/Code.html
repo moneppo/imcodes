@@ -95,7 +95,7 @@
 			<ul class="pure-paginator" id="Timeline">
 				<li><a class="pure-button accent" href="step1.html" disabled><i class="fa fa-caret-left"></i></a></li>
 		    {% for number in range(numSteps) %}
-				<li><a class="pure-button accent pure-button-active" href="step{{number-1}}.html">Step {{number+1}}</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step{{number}}.html">Step {{number+1}}</a></li>
 		    {% endfor %}
 				<li><a class="pure-button accent" href="step{{number+1}}.html"><i class="fa fa-caret-right"></i></a></li>
 	    </ul>

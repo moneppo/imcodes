@@ -11,9 +11,10 @@
 		var pop = Popcorn( "#Video" ); 
 		{% for item in keyframes %}
 			pop.code({
-				start: item[0],
+				start: {{item[0]}},
 				onStart: function( options ) {
-					$("#Text").vale({{item[1]}})
+					console.log("updating...");
+					$("#Text").html($('#step{{loop.index0}}').html().slice(8,-6));
 				}
 			});
 		{% endfor %}
@@ -22,6 +23,11 @@
 </head>
 <body>
 	<body>
+	{% for item in keyframes %}
+		<code type="text/html" id="step{{loop.index0}}" style="display: none;">
+			<!--{{item[1]}}-->
+		</code>
+	{% endfor %}
 	<div class="pure-g">
     <div class="pure-u-1">
 			<ul class="pure-paginator" id="Timeline">
@@ -30,7 +36,7 @@
 					<i class="fa fa-caret-left"></i>
 				</a></li>
 		    {% for number in range(numSteps) %}
-				<li><a class="pure-button accent pure-button-active" href="step{{number-1}}.html">Step {{number+1}}</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step{{number}}.html">Step {{number+1}}</a></li>
 		    {% endfor %}
 				<li><a class="pure-button accent" href="step{{number+1}}.html"
 							 {% if number == numSteps - 1 %} disabled {% endif %}><i class="fa fa-caret-right"></i></a></li>

@@ -97,19 +97,11 @@
 					<i class="fa fa-caret-left"></i>
 				</a></li>
 		    {% for number in range(numSteps) %}
-				<li><a class="pure-button accent pure-button-active" href="step{{number-1}}.html">Step {{number+1}}</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step{{number}}.html">Step {{number+1}}</a></li>
 		    {% endfor %}
 				<li><a class="pure-button accent" href="step{{number+1}}.html"
 							 {% if number == numSteps - 1 %} disabled {% endif %}><i class="fa fa-caret-right"></i></a></li>
 	    </ul>
-		</div>
-		<div class="pure-u-1-2">
-			<div id="Text">
-				{{ contents }}
-			</div>
-		</div>
-		<div class="pure-u-1-2">
-			<div id="DebugOutput" class="accent"></div>
 		</div>
 		<div class="pure-u-1-2">
 			<div id="CodeContainer">
@@ -121,6 +113,14 @@
 		</div>
 		<div class="pure-u-1-2">
 			<canvas id="Canvas" width="400" height="400"></canvas>
+		</div>
+		<div class="pure-u-1-2">
+			<div id="DebugOutput" class="accent"></div>
+		</div>
+		<div class="pure-u-1-2">
+			<div id="Text">
+				{{ contents }}
+			</div>
 		</div>
 	</div>
 </body>
