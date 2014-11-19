@@ -1,11 +1,23 @@
 <!DOCTYPE html>
 <html>
 <head>
-	{% for item in STYLES %}<link rel="stylesheet" href="{{ item }}">{% endfor %}
+	<link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.5.0/pure-min.css"><link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css"><link rel="stylesheet" href="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css"><link rel="stylesheet" href="common.css">
 	<link rel="stylesheet" href="TextAndCode.css">
-	{% for item in SCRIPTS %}
-	<script type="text/javascript" src="{{ item }}"></script>
-	{% endfor %}
+	
+	<script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.js"></script>
+	
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/javascript/javascript.min.js"></script>
+	
+	<script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/python/python.min.js"></script>
+	
+	<script type="text/javascript" src="http://cdn.popcornjs.org/code/dist/popcorn-complete.min.js"></script>
+	
+	<script type="text/javascript" src="skulpt/skulpt.js"></script>
+	
+	<script type="text/javascript" src="skulpt/skulpt-stdlib.js"></script>
+	
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 <script>
 	var jsrepl;
@@ -47,7 +59,7 @@
 	$(document).ready(function() {
 	
 		var language;
-		var filename = "{{ code }}";
+		var filename = "code.py";
 		var ext = filename.split('.').pop().toLowerCase();
 		console.log(ext);
 		switch(ext) {
@@ -92,20 +104,35 @@
 	<div class="pure-g">
     <div class="pure-u-1">
 			<ul class="pure-paginator" id="Timeline">
-				<li><a class="pure-button accent" href="step{{number-1}}.html" 
-							 {% if number == 0 %} disabled {% endif %}>
+				<li><a class="pure-button accent" href="step2.html" 
+							 >
 					<i class="fa fa-caret-left"></i>
 				</a></li>
-		    {% for number in range(numSteps) %}
-				<li><a class="pure-button accent pure-button-active" href="step{{number-1}}.html">Step {{number+1}}</a></li>
-		    {% endfor %}
-				<li><a class="pure-button accent" href="step{{number+1}}.html"
-							 {% if number == numSteps - 1 %} disabled {% endif %}><i class="fa fa-caret-right"></i></a></li>
+		    
+				<li><a class="pure-button accent pure-button-active" href="step-1.html">Step 1</a></li>
+		    
+				<li><a class="pure-button accent pure-button-active" href="step0.html">Step 2</a></li>
+		    
+				<li><a class="pure-button accent pure-button-active" href="step1.html">Step 3</a></li>
+		    
+				<li><a class="pure-button accent pure-button-active" href="step2.html">Step 4</a></li>
+		    
+				<li><a class="pure-button accent pure-button-active" href="step3.html">Step 5</a></li>
+		    
+				<li><a class="pure-button accent pure-button-active" href="step4.html">Step 6</a></li>
+		    
+				<li><a class="pure-button accent" href="step4.html"
+							 ><i class="fa fa-caret-right"></i></a></li>
 	    </ul>
 		</div>
 		<div class="pure-u-1-2">
 			<div id="Text">
-				{{ contents }}
+				<h2>Some Markdown</h2>
+<p>Isn't markdown neat?</p>
+<p>I can even inline some code:
+<code>var foo = 2000;
+foo -= 3;
+console.log(foo);</code></p>
 			</div>
 		</div>
 		<div class="pure-u-1-2">

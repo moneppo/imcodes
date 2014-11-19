@@ -12,6 +12,7 @@ import getopt
 import os
 import shutil
 import fnmatch
+import glob
 from jinja2 import Environment, PackageLoader, evalcontextfilter
 from zipfile import ZipFile
 
@@ -38,11 +39,14 @@ class TimelineParser:
 	def __init__(self, isCode):
 		self.code = isCode;
 	def parse(self, content):
+		print content
 		blocks = RE.findall(content)
-		keyframes = [];
+		keyframes = []
+		print len(blocks)
 		for block in blocks:
 			timeInSeconds = int(block[0]) * 60 + int(block[1])
 			content = block[2]
+			print timeInSeconds + ":" + content
 			if self.code:
 				keyframes.append([timeInSeconds, content])
 			else:
@@ -51,11 +55,12 @@ class TimelineParser:
 		return keyframes
 
 class Layout:
-	def __init__(self, env, yamlBlock, basePath, template):
+	def __init__(self, env, yamlBlock, basePath, template, step = -1):
 		self.env = env
 		self.info = {}
+		self.step = step
 		self.basePath = basePath
-		for prop in ['Title', 'CodeContents', 'Timeline', 'TextContents', 'Video']:
+		for prop in ['Title', 'CodeContents', 'Timeline', 'TextContents', 'VideoURL']:
 			try:
 				self.info[prop] = yamlBlock[prop]
 			except:
@@ -87,60 +92,66 @@ class Layout:
 			return ''
 
 class VideoAndCodeLayout(Layout):
-	def __init__(self, yamlBlock, basePath, env):
-		Layout.__init__(self, env, yamlBlock, basePath, 'VideoAndCode.html')	
+	def __init__(self, yamlBlock, basePath, env, step):
+		Layout.__init__(self, env, yamlBlock, basePath, 'VideoAndCode.html', step)	
 	def generate(self):
 		return self.template.render(
 			keyframes=self.getTimeline(True), 
 			code=self.getCode(),
-			video=self.videoUrl, 
-			title=self.title)
+			video=self.info["VideoURL"], 
+			number=self.step,
+			title=self.info["Title"])
 	
 class VideoLayout(Layout):
-	def __init__(self, yamlBlock, basePath, env): 
-		Layout.__init__(self, env, yamlBlock, basePath, 'Video.html')	
+	def __init__(self, yamlBlock, basePath, env, step): 
+		Layout.__init__(self, env, yamlBlock, basePath, 'Video.html', step)	
 	def generate(self):
 		return self.template.render(
-			video=self.info['Video'],
+			video=self.info['VideoURL'],
+			number=self.step,
 			title=self.info['Title'])
 	
 class TextLayout(Layout):
-	def __init__(self, yamlBlock, basePath, env):
-		Layout.__init__(self, env, yamlBlock, basePath, 'Text.html')	
+	def __init__(self, yamlBlock, basePath, env, step):
+		Layout.__init__(self, env, yamlBlock, basePath, 'Text.html', step)	
 	def generate(self):
 		return self.template.render(
 			contents=self.getMarkdown(),
+			number=self.step,
 			title=self.info['Title'])
 	
 class CodeLayout(Layout):
-	def __init__(self, yamlBlock, basePath, env): 
-		Layout.__init__(self, env, yamlBlock, basePath, 'Code.html')	
+	def __init__(self, yamlBlock, basePath, env, step): 
+		Layout.__init__(self, env, yamlBlock, basePath, 'Code.html', step)	
 	def generate(self):
 		return self.template.render(
 			code=self.getCode(), 
+			number=self.step,
 			title=self.info['Title'])
 	
 class VideoAndTextLayout(Layout):
-	def __init__(self, yamlBlock, basePath, env): 
-		Layout.__init__(self, env, yamlBlock, basePath, 'VideoAndText.html')	
+	def __init__(self, yamlBlock, basePath, env, step): 
+		Layout.__init__(self, env, yamlBlock, basePath, 'VideoAndText.html', step)	
 	def generate(self):	
 		return self.template.render(
 			contents=self.getMarkdown(), 
 			keyframes=self.getTimeline(False),
-			video=self.info['Video'],
+			number=self.step,
+			video=self.info['VideoURL'],
 			title=self.info['Title'])
 	
 class TextAndCodeLayout(Layout):
-	def __init__(self, yamlBlock, basePath, env): 
-		Layout.__init__(self, env, yamlBlock, basePath, 'TextAndCode.html')	
+	def __init__(self, yamlBlock, basePath, env, step): 
+		Layout.__init__(self, env, yamlBlock, basePath, 'TextAndCode.html', step)	
 	def generate(self):
 		return self.template.render(
-			code=self.getCode(), 
+			code=self.getCode(),
+			number=self.step,
 			contents=self.getMarkdown(),
 			title=self.info['Title'])
 
 def renderStep(s, env, index, basePath, outDir):	
-	layout = TextLayout(s, basePath, env)
+	layout = TextLayout(s, basePath, env, 0)
 	layoutType = 'TextLayout'
 	try:
 		layoutType = s['Layout'];
@@ -150,15 +161,15 @@ def renderStep(s, env, index, basePath, outDir):
 	if layoutType == 'Text':		
 		pass
 	elif layoutType == 'Video':
-		layout = VideoLayout(s, basePath, env)	
+		layout = VideoLayout(s, basePath, env, index)	
 	elif layoutType == 'Code':
-		layout = CodeLayout(s, basePath, env)		
+		layout = CodeLayout(s, basePath, env, index)		
 	elif layoutType == 'VideoAndText':
-		layout = VideoAndTextLayout(s, basePath, env)
+		layout = VideoAndTextLayout(s, basePath, env, index)
 	elif layoutType == 'TextAndCode':
-		layout = TextAndCodeLayout(s, basePath, env)
+		layout = TextAndCodeLayout(s, basePath, env, index)
 	elif layoutType == 'VideoAndCode':
-		layout = VideoAndCodeLayout(s, basePath, env)
+		layout = VideoAndCodeLayout(s, basePath, env, index)
 	f = open(outDir + '/step' + str(index) + '.html', 'w')
 	f.write(layout.generate())
 	f.close()
@@ -170,12 +181,13 @@ env.globals = {
 		 "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.js",
 		 "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/javascript/javascript.min.js",
 		 "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/mode/python/python.min.js",
+		 "http://cdn.popcornjs.org/code/dist/popcorn-complete.min.js",
 	   "skulpt/skulpt.js",
 		 "skulpt/skulpt-stdlib.js"],
 	"STYLES":
 		["http://yui.yahooapis.com/pure/0.5.0/pure-min.css",
 		 "http://maxcdn.bootstrapcdn.com/font-awesome/4.2.0/css/font-awesome.min.css",
-	   "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css".
+	   "http://cdnjs.cloudflare.com/ajax/libs/codemirror/4.6.0/codemirror.min.css",
 		 "common.css"]
 };
 
@@ -185,14 +197,12 @@ def generate(yamlFile, inDir, outDir):
 	moduleYaml = yaml.load(f.read())
 	f.close()	
 	env.globals["numSteps"] = len(moduleYaml['Steps']);
-	#WTF
 	env.globals["range"] = range
  	# Render index.html
 	index = Layout(env, moduleYaml, inDir, "index.html")
 	f = open(outDir + '/index.html', 'w')
 	f.write(index.generate())
 	f.close()
-	
 	
 	# Render each step
 	for i,s in enumerate(moduleYaml['Steps']):
@@ -208,7 +218,7 @@ def findYaml(directory):
 
 def main():
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "ho:", ["help", "output"])
+		opts, args = getopt.getopt(sys.argv[1:], "hfo:", ["help", "folder", "output",])
 	except getopt.error, msg:
 		print msg
 		print "for help use -h / --help"
@@ -216,29 +226,43 @@ def main():
 	# process options
 	outFile = "module"
 	inFile = ''
+	assumeFolder = False
 	for o, a in opts:
 		if o in ("-h", "--help"):
 			print __doc__
 			sys.exit(0)
 		if o in ("-o", "--output"):
 			outFile = a
+		if o in ("-f", "--folder"):
+			assumeFolder = True
 	# process arguments
 	for arg in args:
 		inFile = arg
+	
 	if inFile == '':
 		print 'Must have an input file as zip'
 		print "For help use -h/--help"
 		sys.exit(0)	
-	tmpIn = inFile + '.tmpdir'
-	if not os.path.exists(tmpIn):
-		os.makedirs(tmpIn)
+	
+	if assumeFolder:
+		tmpIn = inFile
+	else:
+		tmpIn = inFile + '.tmpdir'
+		if not os.path.exists(tmpIn):
+			os.makedirs(tmpIn)
+		ZipFile(inFile, 'r').extractall(tmpIn)
+	
 	tmpOut = outFile + '.tmpdir'
 	if not os.path.exists(tmpOut):
-		os.makedirs(tmpOut)
-	ZipFile(inFile, 'r').extractall(tmpIn)
+		os.makedirs(tmpOut)	
+	
 	generate(findYaml(tmpIn), tmpIn, tmpOut)
+	for file in glob.glob(r'*.css'):
+		shutil.copy(file, tmpOut)
+	shutil.copytree('skulpt', tmpOut + '/skulpt')
 	shutil.make_archive(outFile, 'zip', tmpOut)
-	shutil.rmtree(tmpIn)
+	if not assumeFolder:
+		shutil.rmtree(tmpIn)
 	shutil.rmtree(tmpOut)
 
 if __name__ == "__main__":

@@ -25,11 +25,15 @@
 	<div class="pure-g">
     <div class="pure-u-1">
 			<ul class="pure-paginator" id="Timeline">
-				<li><a class="pure-button accent" href="step1.html" disabled><i class="fa fa-caret-left"></i></a></li>
+				<li><a class="pure-button accent" href="step{{number-1}}.html" 
+							 {% if number == 0 %} disabled {% endif %}>
+					<i class="fa fa-caret-left"></i>
+				</a></li>
 		    {% for number in range(numSteps) %}
-				<li><a class="pure-button accent pure-button-active" href="step{{number}}.html">Step {{number}}</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step{{number-1}}.html">Step {{number+1}}</a></li>
 		    {% endfor %}
-				<li><a class="pure-button accent" href="step2.html"><i class="fa fa-caret-right"></i></a></li>
+				<li><a class="pure-button accent" href="step{{number+1}}.html"
+							 {% if number == numSteps - 1 %} disabled {% endif %}><i class="fa fa-caret-right"></i></a></li>
 	    </ul>
 		</div>
 		<div class="pure-u-1-2">

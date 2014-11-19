@@ -10,7 +10,7 @@
 <script>
 	var jsrepl;
 	
-	function setupPython(){ 
+	function setupPython() { 
 		function builtinRead(x) {
 			if (Sk.builtinFiles === undefined || Sk.builtinFiles["files"][x] === undefined)
 			throw "File not found: '" + x + "'";
@@ -99,37 +99,39 @@
 </script>
 </head>
 <body>
-	<body>
 	<div class="pure-g">
     <div class="pure-u-1">
 			<ul class="pure-paginator" id="Timeline">
-				<li><a class="pure-button accent" href="step1.html" disabled><i class="fa fa-caret-left"></i></a></li>
+				<li><a class="pure-button accent" href="step{{number-1}}.html" 
+							 {% if number == 0 %} disabled {% endif %}>
+					<i class="fa fa-caret-left"></i>
+				</a></li>
 		    {% for number in range(numSteps) %}
-				<li><a class="pure-button accent pure-button-active" href="step{{number}}.html">Step {{number}}</a></li>
+				<li><a class="pure-button accent pure-button-active" href="step{{number-1}}.html">Step {{number+1}}</a></li>
 		    {% endfor %}
-				<li><a class="pure-button accent" href="step2.html"><i class="fa fa-caret-right"></i></a></li>
+				<li><a class="pure-button accent" href="step{{number+1}}.html"
+							 {% if number == numSteps - 1 %} disabled {% endif %}><i class="fa fa-caret-right"></i></a></li>
 	    </ul>
 		</div>
-	<div class="pure-u-1-2">
 		<div class="pure-u-1-2">
 			<video id="Video" autoplay>
 				<source src="{{ video }}">
 			</video>
 		</div>
 		<div class="pure-u-1-2">
-		<div id="DebugOutput" class="accent"></div>
-	</div>
-	<div class="pure-u-1-2">
-		<div id="CodeContainer">
-			<button id="RunButton" class="pure-button accent">
-				<i class="fa fa-caret-right"></i>
-				Run
-			</button>
+			<div id="DebugOutput" class="accent"></div>
+		</div>
+		<div class="pure-u-1-2">
+			<div id="CodeContainer">
+				<button id="RunButton" class="pure-button accent">
+					<i class="fa fa-caret-right"></i>
+					Run
+				</button>
+			</div>
+		</div>
+		<div class="pure-u-1-2">
+			<canvas id="Canvas" width="400" height="400"></canvas>
 		</div>
 	</div>
-	<div class="pure-u-1-2">
-		<canvas id="Canvas" width="400" height="400"></div>
-	</div>
-</div>
 </body>
 </html>
